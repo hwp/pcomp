@@ -7,6 +7,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
 project(pcomp)
 
+include(FindPkgConfig)
+
+pkg_check_modules(UTILS REQUIRED hwp_utils)
+include_directories(${UTILS_INCLUDE_DIRS})
+
 set(CMAKE_C_FLAGS "-Wall")
 enable_testing()
 
