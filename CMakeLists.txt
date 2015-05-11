@@ -12,6 +12,10 @@ include(FindPkgConfig)
 pkg_check_modules(UTILS REQUIRED hwp_utils)
 include_directories(${UTILS_INCLUDE_DIRS})
 
+if(UNIX)
+  set(MATH_LIBRARY m)
+endif(UNIX)
+
 set(CMAKE_C_FLAGS "-Wall")
 enable_testing()
 

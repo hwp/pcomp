@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <math.h>
 #include <locale.h>
 #include <wchar.h>
 #include <errno.h>
@@ -19,12 +20,16 @@ int main(int argc, char** argv) {
   setlocale(LC_ALL, "");
 
   int showhelp = 0;
+  int list = 0;
   int type = 0;
   int opt;
-  while ((opt = getopt(argc, argv, "t:h")) != -1) {
+  while ((opt = getopt(argc, argv, "lt:h")) != -1) {
     switch (opt) {
       case 'h':
         showhelp = 1;
+        break;
+      case 'l':
+        list = 1;
         break;
       case 't':
         type = atoi(optarg);
@@ -67,24 +72,34 @@ int main(int argc, char** argv) {
     exit(EXIT_FAILURE);
   }
 
-  HASHMAP_FOR(counter, wchar_t, k, unsigned int, v) {
-    switch (k) {
-      case L'\n':
-        wprintf(L"\\n:%d\n", v);
-        break;
-      case L'\r':
-        wprintf(L"\\r:%d\n", v);
-        break;
-      case L'\t':
-        wprintf(L"\\t:%d\n", v);
-        break;
-      default:
-        wprintf(L"%lc:%d\n", k, v);
-        break;
-    }
-  } HASHMAP_ENDFOR
+  if (list) {
+    HASHMAP_FOR(counter, wchar_t, k, unsigned int, v) {
+      switch (k) {
+        case L'\n':
+          wprintf(L"\\n:%d\n", v);
+          break;
+        case L'\r':
+          wprintf(L"\\r:%d\n", v);
+          break;
+        case L'\t':
+          wprintf(L"\\t:%d\n", v);
+          break;
+        default:
+          wprintf(L"%lc:%d\n", k, v);
+          break;
+      }
+    } HASHMAP_ENDFOR
+    wprintf(L"total: %zd\n", n);
+  }
 
-  wprintf(L"%zd\n", n);
+  double h = 0;
+  double total = (double) n;
+  HASHMAP_FOR(counter, wchar_t, k, unsigned int, v) {
+    double p = (double) v / total;
+    h -= p * (log(p) / log(2.0));
+  } HASHMAP_ENDFOR
+  wprintf(L"%g %g\n", h, h * n);
+
   if (argc - optind == 1) {
     fclose(file);
   }
