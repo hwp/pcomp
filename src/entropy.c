@@ -4,9 +4,6 @@
 // Author : Weipeng He <heweipeng@gmail.com>
 // Copyright (c) 2015, All rights reserved.
 
-#include <hwp_utils/map.h>
-#include <hwp_utils/debug.h>
-
 #include <stdio.h>
 #include <unistd.h>
 #include <math.h>
@@ -14,6 +11,8 @@
 #include <wchar.h>
 #include <errno.h>
 
+#include <hwp_utils/map.h>
+#include <hwp_utils/debug.h>
 
 int main(int argc, char** argv) {
   debug_init();
@@ -41,7 +40,7 @@ int main(int argc, char** argv) {
   }
 
   if (showhelp || type < 0 || type > 1) {
-    fprintf(stderr, "Usage: %s -t type file\n", argv[0]);
+    fprintf(stderr, "Usage: %s -t type [-l] [file]\n", argv[0]);
     fprintf(stderr, "\ttype 0: character-wise\n");
     exit(EXIT_SUCCESS);
   }
