@@ -8,6 +8,7 @@
 #define COMMON_H_
 
 #include <stdio.h>
+#include <limits.h>
 
 #include <hwp_utils/list.h>
 #include <hwp_utils/map.h>
@@ -16,6 +17,8 @@
  * type of symbol id
  */
 typedef unsigned int sid_t;
+
+#define SID_NOMATCH UINT_MAX
 
 /**
  * a set of symbols
@@ -49,6 +52,26 @@ symset_t* symset_alloc();
  * free a symbol set
  */
 void symset_free(symset_t* sym);
+
+/**
+ * add a new symbol to the symbol set
+ *
+ * @param sym the symbol set
+ * @param t the new symbol
+ *
+ * @return the id of the new symbol
+ */
+sid_t symset_add(symset_t* sym, wchar_t* t);
+
+/**
+ * look up the id of a symbol in the symbol set
+ *
+ * @param sym the symbol set
+ * @param t the symbol
+ *
+ * @return the id of the symbol or SID_NOMATCH if not found
+ */
+sid_t symset_lookup(symset_t* sym, wchar_t* t);
 
 /**
  * encode a byte stream, i.e. file, into a sequence of 

@@ -1,0 +1,13 @@
+// test_config.h.in
+// config file
+//
+// Author : Weipeng He <heweipeng@gmail.com>
+// Copyright (c) 2015, All rights reserved.
+
+#ifndef TEST_CONFIG_H_
+#define TEST_CONFIG_H_
+
+#define TEXT_PATH "@TEXT_PATH@"
+
+#endif // TEST_CONFIG_H_
+
