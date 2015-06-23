@@ -88,6 +88,14 @@ unsigned int word_encode(FILE* file, symset_t* sym, sid_t** text) {
 }
 
 unsigned int symbol_decode(FILE* file, symset_t* sym, sid_t* text, unsigned int size) {
-  return 0;
+  unsigned int i;
+
+  for (i = 0; i < size; i++) {
+    sid_t s = text[i];
+    assert(s < sym->nsym);
+    fwprintf(file, L"%ls", VOID_TO_PTR(darray_get(sym->symbols, s), wchar_t));
+  }
+
+  return size;
 }
 
