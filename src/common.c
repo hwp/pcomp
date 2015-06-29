@@ -112,7 +112,7 @@ unsigned int word_encode(FILE* file, symset_t* sym, sid_t** text) {
     else {
       if (len >= buf_size) {
         buf_size *= 2;
-        buf = realloc(buf, buf_size + 1);
+        buf = realloc(buf, sizeof(wchar_t) * (buf_size + 1));
       }
       buf[len] = c;
       len++;
