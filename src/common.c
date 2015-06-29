@@ -38,6 +38,7 @@ sid_t symset_add(symset_t* sym, wchar_t* t) {
   sid_t id = sym->nsym;
 
   darray_push_back(sym->symbols, &t);
+  t = VOID_TO_PTR(darray_get(sym->symbols, id), wchar_t); 
   hashmap_put(sym->indices, &t, &id);
 
   sym->nsym++;

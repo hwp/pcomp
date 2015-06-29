@@ -26,23 +26,45 @@ HT_TEST(test_symset_alloc, void*) {
 }
 
 HT_TEST(test_symset_add_lookup, void*) {
+  sid_t id;
   symset_t* sym = symset_alloc();
   HT_ASSERT(sym->nsym == 0);
 
+  id  = symset_lookup(sym, L"x");
+  HT_ASSERT(id == SID_NOMATCH);
   sid_t xid = symset_add(sym, L"x");
   HT_ASSERT(xid != SID_NOMATCH);
   HT_ASSERT(sym->nsym == 1);
+  id = symset_lookup(sym, L"x");
+  HT_ASSERT(id == xid);
+  id = symset_lookup(sym, L"z");
+  HT_ASSERT(id == SID_NOMATCH);
 
+  id  = symset_lookup(sym, L"y");
+  HT_ASSERT(id == SID_NOMATCH);
   sid_t yid = symset_add(sym, L"y");
   HT_ASSERT(yid != SID_NOMATCH);
   HT_ASSERT(sym->nsym == 2);
-
-  sid_t id = symset_lookup(sym, L"z");
-  HT_ASSERT(id == SID_NOMATCH);
-  id = symset_lookup(sym, L"x");
-  HT_ASSERT(id == xid);
   id = symset_lookup(sym, L"y");
   HT_ASSERT(id == yid);
+  id = symset_lookup(sym, L"z");
+  HT_ASSERT(id == SID_NOMATCH);
+
+  wchar_t t[] = L"计";
+  id  = symset_lookup(sym, t);
+  HT_ASSERT(id == SID_NOMATCH);
+  symset_add(sym, t);
+  HT_ASSERT(sym->nsym == 3);
+  id  = symset_lookup(sym, t);
+  HT_ASSERT(id != SID_NOMATCH);
+
+  t[0] = L'军';
+  id  = symset_lookup(sym, t);
+  HT_ASSERT(id == SID_NOMATCH);
+  symset_add(sym, t);
+  HT_ASSERT(sym->nsym == 4);
+  id  = symset_lookup(sym, t);
+  HT_ASSERT(id != SID_NOMATCH);
 
   symset_free(sym);
 }

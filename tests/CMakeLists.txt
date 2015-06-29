@@ -23,6 +23,8 @@ add_test(NAME char_encode_decode_1
   COMMAND run_and_diff.sh ./char_encode_decode ${TEXT_PATH}/text1 ${TEXT_PATH}/text1)
 add_test(NAME char_encode_decode_2 
   COMMAND run_and_diff.sh ./char_encode_decode ${TEXT_PATH}/text2 ${TEXT_PATH}/text2)
+add_test(NAME char_encode_decode_3 
+  COMMAND run_and_diff.sh ./char_encode_decode ${TEXT_PATH}/text3 ${TEXT_PATH}/text3)
 
 add_executable(word_encode_decode 
   word_encode_decode.c ../src/common.c)
@@ -33,4 +35,6 @@ add_test(NAME word_encode_decode_1
   COMMAND run_and_diff.sh ./word_encode_decode ${TEXT_PATH}/text1 ${TEXT_PATH}/text1)
 add_test(NAME word_encode_decode_2 
   COMMAND run_and_diff.sh ./word_encode_decode ${TEXT_PATH}/text2 ${TEXT_PATH}/text2)
+add_test(NAME word_encode_decode_3 
+  COMMAND run_and_diff.sh ./word_encode_decode ${TEXT_PATH}/text3 ${TEXT_PATH}/text3)
 
