@@ -88,7 +88,7 @@ unsigned int char_encode(FILE* file, symset_t* sym, sid_t** text);
 /**
  * encode a byte stream, i.e. file, into a sequence of 
  * symbols, which are words. Words are seperated by spaces
- * and punctuations, i.e. [^a-zA-Z0-9].
+ * and punctuations, i.e. not iswalnum().
  *
  * @param file input stream
  * @param sym set of symbols, should be initialized and empty

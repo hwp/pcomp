@@ -96,6 +96,51 @@ HT_TEST(test_char_encode_2, void*) {
   fclose(in);
 }
 
+HT_TEST(test_word_encode_0, void*) {
+  FILE* in = get_text(0);
+
+  symset_t* sym = symset_alloc();
+  sid_t* text = NULL;
+
+  unsigned int size = word_encode(in, sym, &text);
+  HT_ASSERT(sym->nsym == 5);
+  HT_ASSERT(size == 5);
+
+  symset_free(sym);
+  free(text);
+  fclose(in);
+}
+
+HT_TEST(test_word_encode_1, void*) {
+  FILE* in = get_text(1);
+
+  symset_t* sym = symset_alloc();
+  sid_t* text = NULL;
+
+  unsigned int size = word_encode(in, sym, &text);
+  HT_ASSERT(sym->nsym == 46);
+  HT_ASSERT(size == 113);
+
+  symset_free(sym);
+  free(text);
+  fclose(in);
+}
+
+HT_TEST(test_word_encode_2, void*) {
+  FILE* in = get_text(2);
+
+  symset_t* sym = symset_alloc();
+  sid_t* text = NULL;
+
+  unsigned int size = word_encode(in, sym, &text);
+  HT_ASSERT(sym->nsym == 8);
+  HT_ASSERT(size == 9);
+
+  symset_free(sym);
+  free(text);
+  fclose(in);
+}
+
 HT_TEST(test_cases, void*) {
   int i; 
   for (i = 0; i < case_max_id; i++) {
@@ -132,6 +177,9 @@ int main(int argc, char** argv) {
   ht_add_test(suit, test_char_encode_0);
   ht_add_test(suit, test_char_encode_1);
   ht_add_test(suit, test_char_encode_2);
+  ht_add_test(suit, test_word_encode_0);
+  ht_add_test(suit, test_word_encode_1);
+  ht_add_test(suit, test_word_encode_2);
 
   int ret = ht_run_suit(suit, &option);
   ht_suit_free(suit);

@@ -24,3 +24,13 @@ add_test(NAME char_encode_decode_1
 add_test(NAME char_encode_decode_2 
   COMMAND run_and_diff.sh ./char_encode_decode ${TEXT_PATH}/text2 ${TEXT_PATH}/text2)
 
+add_executable(word_encode_decode 
+  word_encode_decode.c ../src/common.c)
+target_link_libraries(word_encode_decode ${UTILS_LIBRARIES})
+add_test(NAME word_encode_decode_0 
+  COMMAND run_and_diff.sh ./word_encode_decode ${TEXT_PATH}/text0 ${TEXT_PATH}/text0)
+add_test(NAME word_encode_decode_1 
+  COMMAND run_and_diff.sh ./word_encode_decode ${TEXT_PATH}/text1 ${TEXT_PATH}/text1)
+add_test(NAME word_encode_decode_2 
+  COMMAND run_and_diff.sh ./word_encode_decode ${TEXT_PATH}/text2 ${TEXT_PATH}/text2)
+
