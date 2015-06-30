@@ -4,14 +4,15 @@
 // Author : Weipeng He <heweipeng@gmail.com>
 // Copyright (c) 2015, All rights reserved.
 
+#include "common.h"
+
 #include <stdio.h>
 #include <unistd.h>
-#include <math.h>
 #include <locale.h>
+#include <math.h>
 #include <wchar.h>
-#include <errno.h>
+#include <assert.h>
 
-#include <hwp_utils/map.h>
 #include <hwp_utils/debug.h>
 
 int main(int argc, char** argv) {
@@ -41,7 +42,10 @@ int main(int argc, char** argv) {
 
   if (showhelp || type < 0 || type > 1) {
     fprintf(stderr, "Usage: %s -t type [-l] [file]\n", argv[0]);
+    fprintf(stderr, "\tuse stdin if file not given\n");
     fprintf(stderr, "\ttype 0: character-wise\n");
+    fprintf(stderr, "\ttype 1: word-wise\n");
+    fprintf(stderr, "\t-l: list all symbols\n");
     exit(EXIT_SUCCESS);
   }
 
@@ -49,61 +53,73 @@ int main(int argc, char** argv) {
   if (argc - optind == 1) {
     file = fopen(argv[optind], "r");
   }
-  wchar_t c;
-  size_t n = 0;
-  hashmap_t* counter = hashmap_alloc(sizeof(wchar_t),
-      NULL, NULL, sizeof(unsigned int), NULL, NULL,
-      HASHMAP_DEFAULT_NBINS, hash_wchar, NULL,
-      compar_wchar, NULL);
-  while ((c = fgetwc(file)) != WEOF) {
-    void* v = hashmap_get(counter, &c);
-    unsigned int x = 0;
-    if (v) {
-      x = VOID_TO_UINT(v);
-    }
-    x++;
-    hashmap_put(counter, &c, &x);
-    n++;
+
+  symset_t* set = symset_alloc();
+  sid_t* seq = NULL;
+  unsigned int n = 0;
+  switch (type) {
+    case 0:
+      n = char_encode(file, set, &seq);
+      break;
+    case 1:
+      n = word_encode(file, set, &seq);
+      break;
+    default:
+      assert(0);
+      break;
   }
 
-  if (errno == EILSEQ) {
-    perror("fgetwc");
-    exit(EXIT_FAILURE);
+  unsigned int* counter = calloc(set->nsym,
+      sizeof(unsigned int));
+  unsigned int i;
+  for (i = 0; i < n; i++) {
+    counter[seq[i]]++;
   }
 
   if (list) {
-    HASHMAP_FOR(counter, wchar_t, k, unsigned int, v) {
-      switch (k) {
-        case L'\n':
-          wprintf(L"\\n:%d\n", v);
-          break;
-        case L'\r':
-          wprintf(L"\\r:%d\n", v);
-          break;
-        case L'\t':
-          wprintf(L"\\t:%d\n", v);
-          break;
-        default:
-          wprintf(L"%lc:%d\n", k, v);
-          break;
-      }
-    } HASHMAP_ENDFOR
+    for (i = 0; i < set->nsym; i++) {
+      wchar_t* str = escape_wcstr(VOID_TO_PTR(
+            darray_get(set->symbols, i), wchar_t));
+      wprintf(L"%ls: %zd\n", str, counter[i]);
+      free(str);
+    }
     wprintf(L"total: %zd\n", n);
   }
 
-  double h = 0;
   double total = (double) n;
-  HASHMAP_FOR(counter, wchar_t, k, unsigned int, v) {
-    double p = (double) v / total;
-    h -= p * (log(p) / log(2.0));
-  } HASHMAP_ENDFOR
-  wprintf(L"%g %g\n", h, h * n);
+
+  size_t s = 0;
+  size_t ts = 0;
+  for (i = 0; i < set->nsym; i++) {
+    size_t t = wcstombs(NULL, VOID_TO_PTR(
+          darray_get(set->symbols, i), wchar_t), 0);
+    s += t;
+    ts += t * counter[i];
+  }
+  wprintf(L"size of original file: %zd bytes\n", ts);
+  wprintf(L"# of symbols: %zd\n", set->nsym);
+  wprintf(L"length of text: %zd\n", n);
+  wprintf(L"size of symbols (without compression): %zd bytes\n", s);
+
+  double h0 = log((double) set->nsym) / log(2.0);
+  wprintf(L"zeroth order entropy: %g bits\n", h0);
+  wprintf(L"zeroth order encoding: %g (%g) bytes\n", h0 * total / 8.0, h0 * total / 8.0 + s);
+
+  double h1 = 0.0;
+  for (i = 0; i < set->nsym; i++) {
+    double p = (double) counter[i] / total;
+    h1 -= p * (log(p) / log(2.0));
+  }
+  wprintf(L"first order entropy: %g bits\n", h1);
+  wprintf(L"first order encoding: %g (%g) bytes\n", h1 * total / 8.0, h1 * total / 8.0 + s);
 
   if (argc - optind == 1) {
     fclose(file);
   }
 
-  hashmap_free(counter);
+  symset_free(set);
+  free(seq);
+  free(counter);
   exit(EXIT_SUCCESS);
 }
 
