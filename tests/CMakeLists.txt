@@ -14,6 +14,11 @@ add_executable(test_symbols
 target_link_libraries(test_symbols ${UTILS_LIBRARIES})
 add_test(NAME test_symbols COMMAND test_symbols)
 
+add_executable(test_bitio
+  test_bitio.c ../src/bitio.c)
+target_link_libraries(test_bitio ${UTILS_LIBRARIES})
+add_test(NAME test_bitio COMMAND test_bitio)
+
 add_executable(char_encode_decode 
   char_encode_decode.c ../src/symbol.c)
 target_link_libraries(char_encode_decode ${UTILS_LIBRARIES})
