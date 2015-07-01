@@ -1,11 +1,11 @@
-// common.h
-// common functions
+// symbol.h
+// symbol functions
 //
 // Author : Weipeng He <heweipeng@gmail.com>
 // Copyright (c) 2015, All rights reserved.
 
-#ifndef COMMON_H_
-#define COMMON_H_
+#ifndef SYMBOL_H_
+#define SYMBOL_H_
 
 #include <stdio.h>
 #include <limits.h>
@@ -109,5 +109,5 @@ unsigned int word_encode(FILE* file, symset_t* sym, sid_t** text);
  */
 unsigned int symbol_decode(FILE* file, symset_t* sym, sid_t* text, unsigned int size);
 
-#endif  // COMMON_H_
+#endif  // SYMBOL_H_
 

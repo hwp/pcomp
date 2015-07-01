@@ -4,7 +4,7 @@
 // Author : Weipeng He <heweipeng@gmail.com>
 // Copyright (c) 2015, All rights reserved.
 
-#include "common.h"
+#include "symbol.h"
 
 #include <stdio.h>
 #include <unistd.h>

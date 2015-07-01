@@ -1,10 +1,10 @@
-// common.c
-// common functions
+// symbol.c
+// symbol functions
 //
 // Author : Weipeng He <heweipeng@gmail.com>
 // Copyright (c) 2015, All rights reserved.
 
-#include "common.h"
+#include "symbol.h"
 
 #include <string.h>
 #include <wchar.h>

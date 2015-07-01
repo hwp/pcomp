@@ -5,7 +5,7 @@
 // Copyright (c) 2015, All rights reserved.
 
 #include "cases.h"
-#include "../src/common.h"
+#include "../src/symbol.h"
 
 #include <stdlib.h>
 #include <wchar.h>
