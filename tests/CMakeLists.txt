@@ -19,6 +19,11 @@ add_executable(test_bitio
 target_link_libraries(test_bitio ${UTILS_LIBRARIES})
 add_test(NAME test_bitio COMMAND test_bitio)
 
+add_executable(test_huffman
+  test_huffman.c ../src/huffman.c ../src/symbol.c ../src/bitio.c)
+target_link_libraries(test_huffman ${UTILS_LIBRARIES})
+add_test(NAME test_huffman COMMAND test_huffman)
+
 add_executable(char_encode_decode 
   char_encode_decode.c ../src/symbol.c)
 target_link_libraries(char_encode_decode ${UTILS_LIBRARIES})
